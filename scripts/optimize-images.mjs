@@ -1,10 +1,10 @@
-// Converts the source art in "design assests/" into web-sized WebP files in public/art/.
+// Converts the source art in "design assets/" into web-sized WebP files in public/art/.
 // Run with: npm run images
 import fs from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 
-const ROOT = "design assests";
+const ROOT = "design assets";
 const BG = path.join(ROOT, "menu backgrounds");
 const CHARS = path.join(ROOT, "characters");
 const MISC = path.join(ROOT, "miscellanous");
@@ -244,7 +244,7 @@ for (const [folder, file, name] of collabArt) {
 }
 
 /* ---------- Collaboration images you add yourself ---------- */
-// Drop files into "design assests/collaborations" named after the collab id in lib/collabs.ts:
+// Drop files into "design assets/collaborations" named after the collab id in lib/collabs.ts:
 //   {id}-logo.png   the other game's logo, shown on the timeline card and in the detail view
 //   {id}.png        key art for the detail view (replaces the guest-partner art above)
 // .png, .jpg, .jpeg and .webp all work. Then run: npm run images
