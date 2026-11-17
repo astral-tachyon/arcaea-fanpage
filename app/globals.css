@@ -1,0 +1,258 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------- Tokens ---------- */
+
+:root {
+  --paper: #fbfaff;
+  --surface: #ffffff;
+  --wash: #f2edfd;
+  --ink: #1d1233;
+  --ink-soft: #564a73;
+  --line: rgb(76 44 140 / 0.14);
+  --lilac: #cdbdf7;
+  --violet: #6537c9;
+  --plum: #2b1259;
+  --btn-bg: #2b1259;
+  --btn-fg: #ffffff;
+  --arc-blue: #37b6e6;
+  --arc-pink: #e86bb8;
+  --cta-art: url("/art/cta-light.webp");
+  color-scheme: light;
+}
+
+.dark {
+  --paper: #120a24;
+  --surface: #1b1035;
+  --wash: #20133d;
+  --ink: #f4effe;
+  --ink-soft: #bcb0da;
+  --line: rgb(205 189 247 / 0.16);
+  --lilac: #8f74d8;
+  --violet: #bca4ff;
+  --btn-bg: #e6dcff;
+  --btn-fg: #1d0f3d;
+  --cta-art: url("/art/cta-dark.webp");
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-wash: var(--wash);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-lilac: var(--lilac);
+  --color-violet: var(--violet);
+  --color-plum: var(--plum);
+  --color-btn-bg: var(--btn-bg);
+  --color-btn-fg: var(--btn-fg);
+  --color-arc-blue: var(--arc-blue);
+  --color-arc-pink: var(--arc-pink);
+
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-cormorant), ui-serif, Georgia, serif;
+
+  --ease-glide: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------- Base ---------- */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--lilac);
+    color: #1d1233;
+  }
+
+  /* Japanese labels: Poppins has no kana or kanji, so name suitable system fonts. */
+  [lang="ja"] {
+    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", Meiryo, "Noto Sans JP", sans-serif;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--violet);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+/* ---------- Art + texture layers ---------- */
+
+/* The key art is bright; dim it in the dark theme so light text stays readable beside it. */
+.dark .hero-art {
+  filter: brightness(0.62) saturate(1.05);
+}
+
+.cta-art {
+  background-image: var(--cta-art);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Fine film grain, laid over art and tinted panels. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Diamond lattice that fades out toward the edges. */
+.lattice {
+  background-image:
+    repeating-linear-gradient(45deg, var(--line) 0 1px, transparent 1px 44px),
+    repeating-linear-gradient(-45deg, var(--line) 0 1px, transparent 1px 44px);
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, #000 10%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, #000 10%, transparent 75%);
+}
+
+/* ---------- Marquee ---------- */
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee {
+  animation: marquee 38s linear infinite;
+}
+
+.marquee-wrap:hover .marquee,
+.marquee-wrap:focus-within .marquee {
+  animation-play-state: paused;
+}
+
+/* ---------- Song list paging ---------- */
+
+.page-in {
+  animation: menu-in 0.4s var(--ease-glide);
+}
+
+/* ---------- Mobile menu ---------- */
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+dialog.mobile-menu[open] {
+  animation: menu-in 0.35s var(--ease-glide);
+}
+
+dialog.mobile-menu[open] li {
+  animation: menu-in 0.5s var(--ease-glide) backwards;
+  animation-delay: calc(var(--i) * 60ms + 80ms);
+}
+
+/* ---------- Partner profile dialog ---------- */
+
+@keyframes profile-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+dialog.profile-dialog[open] {
+  animation: profile-in 0.5s var(--ease-glide);
+}
+
+dialog.profile-dialog[open]::backdrop {
+  animation: fade-in 0.4s ease-out;
+}
+
+.profile-swap {
+  animation: menu-in 0.5s var(--ease-glide);
+}
+
+dialog.lightbox[open] {
+  animation: fade-in 0.35s ease-out;
+}
+
+.lightbox-image {
+  animation: fade-in 0.5s ease-out;
+}
+
+/* ---------- Geometric sequence (FAQ backdrop) ---------- */
+
+@keyframes turn {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.sequence-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: turn var(--turn, 120s) linear infinite;
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .marquee,
+  dialog.mobile-menu[open],
+  dialog.mobile-menu[open] li,
+  dialog.profile-dialog[open],
+  dialog.profile-dialog[open]::backdrop,
+  dialog.lightbox[open],
+  .lightbox-image,
+  .sequence-ring,
+  .page-in,
+  .profile-swap {
+    animation: none !important;
+  }
+
+  .marquee {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100% !important;
+  }
+
+  .marquee [data-duplicate] {
+    display: none;
+  }
+}
+
+/* Socials art: on wide screens the band's top and bottom edges dissolve into the page. */
+@media (min-width: 64rem) {
+  .socials-art {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  }
+}
